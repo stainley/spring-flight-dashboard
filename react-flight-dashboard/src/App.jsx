@@ -3,12 +3,14 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import FlightInfo from "./component/FlightInfo.jsx";
 
+const EXTERNA_URL = 'ws://192.168.2.175:8081/websocket';
+const LOCAL_HOST = 'ws://127.0.0.1:8081/websocket';
 function App() {
 
     const [flights, setFlights] = useState([]);
 
     useEffect(() => {
-        const ws = new WebSocket('ws://localhost:8081/websocket');
+        const ws = new WebSocket(LOCAL_HOST);
 
         ws.onmessage = (event) => {
             const flight = JSON.parse(event.data);
@@ -21,8 +23,8 @@ function App() {
     }, []);
 
     const emptyInfo = {
-        unplannedEventsCount: 2,
-        plannedEventsCount: 12,
+        unplannedEventsCount: 0,
+        plannedEventsCount: flights.length,
     }
 
     return (
