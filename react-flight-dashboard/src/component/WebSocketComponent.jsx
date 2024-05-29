@@ -1,4 +1,7 @@
 import {useState, useEffect} from "react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHome, faFighterJet,  } from '@fortawesome/free-solid-svg-icons'; // Example icon
+
 import PropTypes from "prop-types";
 import './websocket.scss';
 
@@ -10,7 +13,7 @@ const WebSocketComponent = () => {
 
         ws.onmessage = (event) => {
             const flight = JSON.parse(event.data);
-            setMessages(prevMesg => [...prevMesg.slice(-10), flight]);
+            setMessages(prevMsg => [...prevMsg.slice(-10), flight]);
         };
 
         return () => {
@@ -27,8 +30,22 @@ const WebSocketComponent = () => {
                     <li key={index} className="flight-row">
                         Flight No: {flight.flightNo},
                         Flight Name: {flight.flightName},
-                        Flight Date: {formatDate(flight.flightDate)}
-                        Flight Time: {extractTime(flight.flightDate)}
+                        <FontAwesomeIcon
+                            icon={faFighterJet}
+                            color={ "#353535" }
+                            size={"sm"}
+                            style={{
+                                marginRight: "6px",
+                                marginLeft: "6px"
+                        }}/>Flight Date: {formatDate(flight.flightDate)}
+                        <FontAwesomeIcon
+                            icon={faHome}
+                            size={"sm"}
+                            style={{
+                                marginRight: "6px",
+                                marginLeft: "6px",
+                            }}
+                        />Flight Time: {extractTime(flight.flightDate)}
                     </li>
                 ))}
             </ul>

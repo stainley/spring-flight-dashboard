@@ -1,26 +1,16 @@
 package org.salapp.quarkusmq.springflightproducer.config;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.kafka.common.serialization.Serdes;
-import org.apache.kafka.streams.StreamsBuilder;
-import org.apache.kafka.streams.kstream.Consumed;
-import org.apache.kafka.streams.kstream.KStream;
-import org.salapp.quarkusmq.springflightproducer.model.Flight;
-import org.springframework.context.annotation.Bean;
-import org.springframework.kafka.annotation.EnableKafkaStreams;
-import org.springframework.kafka.annotation.KafkaStreamsDefaultConfiguration;
-import org.springframework.kafka.config.KafkaStreamsConfiguration;
-import org.springframework.kafka.config.StreamsBuilderFactoryBean;
-import org.springframework.kafka.support.serializer.JsonSerde;
-import org.springframework.stereotype.Component;
-
-import java.util.HashMap;
-import java.util.Map;
-
-@Component
-@EnableKafkaStreams
+//@Component
+//@EnableKafkaStreams
 public class KafkaStreamsConfig {
+
+
+    /*private final WebSocketService webSocketService;
+
+    @Autowired
+    public KafkaStreamsConfig(@Qualifier("flightWebSocketService") WebSocketService webSocketService) {
+        this.webSocketService = webSocketService;
+    }
 
     @Bean(name = KafkaStreamsDefaultConfiguration.DEFAULT_STREAMS_BUILDER_BEAN_NAME)
     public StreamsBuilderFactoryBean defaultKafkaStreamsBuilder() {
@@ -40,21 +30,25 @@ public class KafkaStreamsConfig {
         KStream<String, Flight> stream = streamsBuilder.stream("input-topic",
                 Consumed.with(Serdes.String(), new JsonSerde<>(Flight.class)));
 
+        stream.foreach((k, v) -> System.out.println(v));
 
-        stream.filter((key, value) -> value != null && value.getFlightName().startsWith("SDQ"))
-            .foreach((key, value) -> System.out.println("Received message: Key=" + key + " Value=" + value));
+        *//*  stream.filter((key, value) -> value != null && value.getDestination().startsWith("MIA"))
+            .foreach((key, value) -> System.out.println("Received message: Key=" + key + " Value=" + value));*//*
 
-        stream.filter((key, value) -> value != null && value.getFlightName().startsWith("SDQ")).to("output-topic");
+        stream.filter((key, value) -> value != null).to("output-topic");
         return stream;
     }
 
     @Bean
-    public KStream<String, String> readingFromOutputTopicStream(StreamsBuilder streamsBuilder) {
-        KStream<String, String> stream = streamsBuilder.stream("output-topic");
+    public KStream<String, Flight> readingFromOutputTopicStream(StreamsBuilder streamsBuilder) {
+        KStream<String, Flight> stream = streamsBuilder.stream("output-topic", Consumed.with(Serdes.String(), new JsonSerde<>(Flight.class)));
 
-        stream.foreach((key, value) -> System.out.println("READING FROM OUTPUT: Key=" + key + " Value=" + value));
-        /*stream.to("output-topic");*/
+        stream.foreach((key, flightValue) -> {
+            System.out.println("Sending to the WebSocket: Key=" + key + " Value=" + flightValue);
+            webSocketService.sendMessage(flightValue);
+        });
+
         return stream;
     }
-
+*/
 }

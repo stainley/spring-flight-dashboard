@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: spring-flight-producer
+  main:
+    allow-bean-definition-overriding: true
+  kafka:
+    bootstrap-servers: localhost:9092
+    streams:
+      application-id: flight-info-streams-app
+      default-key-serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+      # Set default value serializer to JsonSerializer
+      #default-value-serde: org.springframework.kafka.support.serializer.JsonSerializer
+      default-value-serde: org.springframework.kafka.support.serializer.JsonSerde
+
+      #default-value-serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+
+#logging:
+#  level:
+#    org.apache.kafka: DEBUG
+#    org.springframework.kafka: DEBUG

@@ -1,0 +1,125 @@
+$primary-color: #333;
+$secondary-color: #888;
+$highlight-color: #ffd044;
+$background-color: #dddddd;
+$hover-color: #646cff;
+$on-time-color: green;
+
+.performance-dashboard {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: $background-color;
+  padding: 20px;
+  box-sizing: border-box;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+
+    .title {
+      font-size: 2rem;
+      color: $primary-color;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .date {
+      font-size: 1.1rem;
+      color: $secondary-color;
+    }
+  }
+
+  .summary {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+
+    .event-count, .downtime {
+      font-size: 1.4rem;
+      color: $primary-color;
+    }
+
+    .downtime {
+      color: $highlight-color;
+      background-color: #444444;
+      padding: 10px 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s, color 0.3s;
+
+      &:hover {
+        background-color: darken($highlight-color, 10%);
+        color: $background-color;
+      }
+    }
+  }
+
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+
+    th,
+    td {
+      padding: 15px;
+      border: 1px solid #ccc;
+      text-align: left;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    th {
+      font-weight: bold;
+      background-color: $primary-color;
+      color: white;
+      text-transform: uppercase;
+    }
+
+    tr:nth-child(even) {
+      background-color: lighten($primary-color, 30%);
+      color: white;
+    }
+
+    tr:hover {
+      background-color: $hover-color;
+      color: white;
+    }
+
+    .aircraft-type,
+    .to-airport,
+    .from-scheduled-time,
+    .to-scheduled-time {
+      text-align: center;
+    }
+
+    .delay,
+    .downtime,
+    .cancellation {
+      color: $highlight-color;
+    }
+
+    .on-time {
+      color: $on-time-color;
+      font-weight: bold;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .header, .summary {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .table {
+      th, td {
+        font-size: 0.9rem;
+        padding: 10px;
+      }
+    }
+  }
+}
