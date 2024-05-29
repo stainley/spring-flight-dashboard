@@ -100,6 +100,9 @@ Navigate to the react-flight-dashboard directory, install dependencies, and star
 ```
 The React application will be available at http://localhost:5173/.
 
+<img width="1325" alt="image" src="https://github.com/stainley/spring-flight-dashboard/assets/1172668/6bd4f645-3701-41e5-8eed-261ff266da85">
+
+
 
 ## Contributing
 Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.
