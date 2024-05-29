@@ -1,12 +1,14 @@
 $primary-color: #333;
 $secondary-color: #888;
 $highlight-color: #ffd044;
-$background-color: #dddddd;
+$background-color: #565a8b;
 $hover-color: #646cff;
 $on-time-color: green;
 
 .performance-dashboard {
   width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   background-color: $background-color;

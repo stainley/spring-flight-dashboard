@@ -1,6 +1,7 @@
 package org.salapp.springkafka.springflightconsumer.service;
 
-import org.salapp.springkafka.springflightconsumer.model.Flight;
+
+import org.salapp.springkafka.springflightshared.model.Flight;
 
 public interface IWebSocketService {
 

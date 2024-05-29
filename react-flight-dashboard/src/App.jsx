@@ -1,17 +1,14 @@
 import {useState, useEffect} from 'react'
-import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-import WebSocketComponent from "./component/WebSocketComponent.jsx";
 import FlightInfo from "./component/FlightInfo.jsx";
 
 function App() {
-    const [count, setCount] = useState(0)
+
     const [flights, setFlights] = useState([]);
 
-
     useEffect(() => {
-        const ws = new WebSocket('ws://localhost:8080/websocket');
+        const ws = new WebSocket('ws://localhost:8081/websocket');
 
         ws.onmessage = (event) => {
             const flight = JSON.parse(event.data);
@@ -23,6 +20,10 @@ function App() {
         };
     }, []);
 
+    const emptyInfo = {
+        unplannedEventsCount: 2,
+        plannedEventsCount: 12,
+    }
 
     return (
         <>
@@ -34,7 +35,7 @@ function App() {
             </div>
 
             <div>
-                <FlightInfo data={flights} flights={flights}/>
+                <FlightInfo data={emptyInfo} flights={flights}/>
             </div>
         </>
     )

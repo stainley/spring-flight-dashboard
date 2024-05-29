@@ -1,6 +1,11 @@
 package org.salapp.springkafka.springflightshared.model;
 
 
+import lombok.Getter;
+import lombok.ToString;
+
+@ToString
+@Getter
 public class Flight {
     private String number;
     private String origin;
@@ -17,66 +22,6 @@ public class Flight {
     private String delay;
     private String gateNumber;
     private FlightStatus status;
-
-    public String getNumber() {
-        return number;
-    }
-
-    public String getOrigin() {
-        return origin;
-    }
-
-    public String getDestination() {
-        return destination;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public String getStation() {
-        return station;
-    }
-
-    public String getBegin() {
-        return begin;
-    }
-
-    public String getEnd() {
-        return end;
-    }
-
-    public String getNextFlight() {
-        return nextFlight;
-    }
-
-    public String getTo() {
-        return to;
-    }
-
-    public String getScheduledDepartureTime() {
-        return scheduledDepartureTime;
-    }
-
-    public String getEstimatedDepartureTime() {
-        return estimatedDepartureTime;
-    }
-
-    public String getActualDepartureTime() {
-        return actualDepartureTime;
-    }
-
-    public String getDelay() {
-        return delay;
-    }
-
-    public String getGateNumber() {
-        return gateNumber;
-    }
-
-    public FlightStatus getStatus() {
-        return status;
-    }
 
     public static class Builder {
         private String number;

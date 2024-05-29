@@ -1,14 +1,13 @@
 package org.salapp.springkafka.springflightconsumer.config;
 
 import org.apache.kafka.common.serialization.Serdes;
-import org.salapp.springkafka.springflightconsumer.model.Flight;
+import org.salapp.springkafka.springflightshared.model.Flight;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.KafkaStreamsDefaultConfiguration;
 import org.springframework.kafka.config.KafkaStreamsConfiguration;
 import org.springframework.kafka.config.StreamsBuilderFactoryBean;
-import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerde;
 
 import java.util.HashMap;
@@ -36,4 +35,5 @@ public class KafkaStreamsConfig {
         KafkaStreamsConfiguration kafkaStreamsConfiguration = new KafkaStreamsConfiguration(config);
         return new StreamsBuilderFactoryBean(kafkaStreamsConfiguration);
     }
+
 }

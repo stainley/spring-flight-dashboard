@@ -1,6 +1,8 @@
 package org.salapp.quarkusmq.springflightproducer.service;
 
 import jakarta.annotation.PostConstruct;
+import org.salapp.springkafka.springflightshared.model.Flight;
+import org.salapp.springkafka.springflightshared.model.FlightStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -20,6 +22,7 @@ import java.util.Random;
 public class DashboardProducerService {
 
     private static final String TOPIC = "flightDashboard-input";
+    private final Random random = new Random();
 
     private final KafkaTemplate<String, Flight> kafkaTemplate;
 
@@ -42,15 +45,14 @@ public class DashboardProducerService {
     @PostConstruct
     public void sendMessages() {
 
-        Random random = new Random();
 
         Flux.interval(Duration.ofSeconds(30))
                 .map(tick -> {
 
-                    String origin = origins.get(new Random().nextInt(origins.size()));
+                    String origin = origins.get(random.nextInt(origins.size()));
                     String destination;
                     do {
-                        destination = destinations.get(new Random().nextInt(destinations.size()));
+                        destination = destinations.get(random.nextInt(destinations.size()));
                     } while (origin.equals(destination));
 
                     LocalDateTime now = LocalDateTime.now();
@@ -69,11 +71,10 @@ public class DashboardProducerService {
 
                     long durationInMinutes = Duration.between(begin, end).toMinutes();
 
-
                     return new Flight.Builder()
-                            .number(flightsNumbers.get(new Random().nextInt(flightsNumbers.size())))
-                            .type(flightsType.get(new Random().nextInt(flightsType.size())))
-                            .origin(origins.get(new Random().nextInt(origins.size())))
+                            .number(flightsNumbers.get(random.nextInt(flightsNumbers.size())))
+                            .type(flightsType.get(random.nextInt(flightsType.size())))
+                            .origin(origins.get(random.nextInt(origins.size())))
                             .destination(destination)
                             .begin(formatter.format(begin))
                             .end(formatter.format(end))

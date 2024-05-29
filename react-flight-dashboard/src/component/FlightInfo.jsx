@@ -1,19 +1,14 @@
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCalendarDay } from '@fortawesome/free-solid-svg-icons'; // Example icon
-
-import CA from "../assets/airlines/CA9012.jpg"
-import AA from "../assets/airlines/AA1234.png";
-
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faCalendarDay} from '@fortawesome/free-solid-svg-icons'; // Example icon
 import './flight_info.scss';
 import {useEffect, useState} from "react";
 
-const FlightInfo = ({ data, flights } ) => {
+const FlightInfo = ({data, flights}) => {
 
     const {
         unplannedEventsCount,
-        plannedEventsCount,
-        snapshotTime,
+        plannedEventsCount
     } = data;
 
     const [totalDelay, setTotalDelay] = useState(0);
@@ -30,7 +25,10 @@ const FlightInfo = ({ data, flights } ) => {
         calculateTotalDelay();
     }, [flights]);
 
-    return(
+    const delayPercentage = flights.length > 0 && !isNaN(totalDelay) ?
+        (Math.abs(totalDelay) / flights.length).toFixed(2) : 0;
+
+    return (
         <div className="performance-dashboard">
             <div className="header">
                 <h1 className="title">Performance Dashboard</h1>
@@ -44,13 +42,16 @@ const FlightInfo = ({ data, flights } ) => {
             </div>
             <div className="summary">
                 <div className="event-count">Planned Events: {plannedEventsCount}</div>
-                <div className="event-count">Delays: {!isNaN(Math.abs(totalDelay/flights.length).toFixed(2)) ?  Math.abs(totalDelay/flights.length).toFixed(2) : 0}%</div>
+                <div
+                    className="event-count">Delays: {delayPercentage}%
+                </div>
             </div>
 
             <table className="table">
                 <thead>
                 <tr>
-                    <th><span><FontAwesomeIcon icon={faCalendarDay} style={{ marginRight: "6px" }} />Flight Number</span></th>
+                    <th><span><FontAwesomeIcon icon={faCalendarDay} style={{marginRight: "6px"}}/>Flight Number</span>
+                    </th>
                     <th>Type</th>
                     <th>From Airport</th>
                     <th>From Scheduled</th>
@@ -59,13 +60,11 @@ const FlightInfo = ({ data, flights } ) => {
                     <th>Delay</th>
                     <th>Status</th>
                     <th>Cancellation</th>
-                    <th>On Time Return</th>
                 </tr>
                 </thead>
                 <tbody>
                 {flights.map((flight, index) => (
-                    <tr key={flight.index}>
-
+                    <tr key={index}>
                         <td>
                             {flight.number}</td>
                         <td>{flight.type}</td>
@@ -76,7 +75,6 @@ const FlightInfo = ({ data, flights } ) => {
                         <td>{flight.delay < 0 ? convertMinutesToHMS(flight.delay) : ''}</td>
                         <td className={flight.delay > 0 ? 'on-time' : 'delay'}>{flight.status}</td>
                         <td>{flight.cancellation}</td>
-                        <td>{flight.onTimeReturn ? "Yes" : "No"}</td>
                     </tr>
                 ))}
                 </tbody>
@@ -87,25 +85,31 @@ const FlightInfo = ({ data, flights } ) => {
 }
 
 FlightInfo.propTypes = {
+    data: PropTypes.shape({
+        unplannedEventsCount: PropTypes.number,
+        plannedEventsCount: PropTypes.number,
+    }),
 
-    flights: PropTypes.shape({
-        flightNo: PropTypes.string.isRequired,
-        flightType: PropTypes.string.isRequired,
-        aircraftType: PropTypes.string.isRequired,
-        registration: PropTypes.object.isRequired,
-        fromAirport: PropTypes.string.isRequired,
-        fromCode: PropTypes.string.isRequired,
-        fromScheduledTime: PropTypes.string.isRequired,
-        fromEstimatedTime: PropTypes.string.isRequired,
-        fromActualTime: PropTypes.string.isRequired,
-        fromDelay: PropTypes.string.isRequired,
-        toAirport: PropTypes.string.isRequired,
-        toCode: PropTypes.string.isRequired,
-        toScheduledTime: PropTypes.string.isRequired,
-        toActualTime: PropTypes.string.isRequired,
-        downtime: PropTypes.string.isRequired,
-        cancellation: PropTypes.string.isRequired,
-    }).isRequired,
+    flights: PropTypes.arrayOf(
+        PropTypes.shape({
+            flightNo: PropTypes.string.isRequired,
+            flightType: PropTypes.string.isRequired,
+            aircraftType: PropTypes.string.isRequired,
+            registration: PropTypes.object.isRequired,
+            fromAirport: PropTypes.string.isRequired,
+            fromCode: PropTypes.string.isRequired,
+            fromScheduledTime: PropTypes.string.isRequired,
+            fromEstimatedTime: PropTypes.string.isRequired,
+            fromActualTime: PropTypes.string.isRequired,
+            fromDelay: PropTypes.string.isRequired,
+            toAirport: PropTypes.string.isRequired,
+            toCode: PropTypes.string.isRequired,
+            toScheduledTime: PropTypes.string.isRequired,
+            toActualTime: PropTypes.string.isRequired,
+            downtime: PropTypes.string.isRequired,
+            cancellation: PropTypes.string.isRequired,
+        }).isRequired,
+    ),
 };
 
 function formatUTCHoursMinutes(timestamp) {
@@ -125,7 +129,6 @@ function convertMinutesToHMS(minutes) {
     // Calculate remaining minutes
     const remainingMinutes = minutes % 60;
 
-    // Format output with leading zeros
     const formattedHours = hours.toString().padStart(2, '0');
     const formattedMinutes = remainingMinutes.toString().padStart(2, '0');
 

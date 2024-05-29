@@ -1,6 +1,7 @@
 package org.salapp.quarkusmq.springflightproducer.controller;
 
 import org.salapp.quarkusmq.springflightproducer.service.DashboardProducerService;
+import org.salapp.springkafka.springflightshared.model.Flight;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;

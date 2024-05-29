@@ -1,7 +1,7 @@
 package org.salapp.springkafka.springflightconsumer.service;
 
 import org.salapp.springkafka.springflightconsumer.config.WebSocketHandler;
-import org.salapp.springkafka.springflightconsumer.model.Flight;
+import org.salapp.springkafka.springflightshared.model.Flight;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
