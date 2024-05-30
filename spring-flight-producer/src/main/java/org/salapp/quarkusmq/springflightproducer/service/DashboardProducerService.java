@@ -2,6 +2,7 @@ package org.salapp.quarkusmq.springflightproducer.service;
 
 import jakarta.annotation.PostConstruct;
 import lombok.extern.log4j.Log4j2;
+import org.salapp.quarkusmq.springflightproducer.exception.FlightException;
 import org.salapp.springkafka.springflightshared.model.Flight;
 import org.salapp.springkafka.springflightshared.model.FlightStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.util.concurrent.ListenableFutureCallback;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.FluxSink;
 import reactor.core.scheduler.Schedulers;
 
 import java.time.Duration;
@@ -45,15 +43,19 @@ public class DashboardProducerService {
 
     public Flight sendMessage(Flight flight, String country) {
 
+
+        if (flight.getNumber().isEmpty() || flight.getOrigin().isEmpty() || flight.getDestination().isEmpty()) {
+            throw new FlightException("Flight number or origin and destination are empty");
+        }
+
         CompletableFuture<SendResult<String, Flight>> future = kafkaTemplate.send(TOPIC, country, flight);
 
-        future.thenAccept( result -> {
-            log.info("Flight sent successfully to kafka topic {}. Flight details: {}", TOPIC, flight);
-        });
+        future.thenAccept(result -> log.info("Flight sent successfully to kafka topic {}. Flight details: {}", TOPIC, flight));
 
         future.exceptionally(ex -> {
             log.error("Error sending flight to Kafka topic: {}. Flight details: {}", TOPIC, flight);
-            return null;
+
+            throw new FlightException("Error sending flight to Kafka topic.");
         });
 
         return flight;
