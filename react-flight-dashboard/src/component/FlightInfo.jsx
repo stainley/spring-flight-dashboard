@@ -2,31 +2,45 @@ import PropTypes from 'prop-types';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faCalendarDay} from '@fortawesome/free-solid-svg-icons'; // Example icon
 import './flight_info.scss';
-import {useEffect, useState} from "react";
+import {useMemo} from "react";
+
+function formatUTCHoursMinutes(timestamp) {
+    const date = new Date(timestamp);
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+
+    return `${hours}:${minutes} ETC`;
+}
+
+function convertMinutesToHMS(minutes) {
+    minutes = Math.abs(minutes);
+
+    // Calculate hours
+    const hours = Math.floor(minutes / 60);
+
+    // Calculate remaining minutes
+    const remainingMinutes = minutes % 60;
+
+    const formattedHours = hours.toString().padStart(2, '0');
+    const formattedMinutes = remainingMinutes.toString().padStart(2, '0');
+
+    // Return formatted string with sign for negative values
+    return `${formattedHours}h:${formattedMinutes}m`;
+}
 
 const FlightInfo = ({data, flights}) => {
 
-    const {
-        unplannedEventsCount,
-        plannedEventsCount
-    } = data;
+    const {unplannedEventsCount, plannedEventsCount} = data;
 
-    const [totalDelay, setTotalDelay] = useState(0);
-
-    useEffect(() => {
-        const calculateTotalDelay = () => {
-            const total = flights.filter(f => f.delay < 0).reduce((acc, flight) => {
-                //console.log(delay, " DELAY");
-                acc += parseFloat(flight.delay);
-                return acc;
-            }, 0);
-            setTotalDelay(total);
-        };
-        calculateTotalDelay();
+    const totalDelay = useMemo(() => {
+        return flights.filter(flight => flight.delay < 0).reduce((acc, flight) => acc + parseFloat(flight.delay), 0);
     }, [flights]);
 
-    const delayPercentage = flights.length > 0 && !isNaN(totalDelay) ?
-        (Math.abs(totalDelay) / flights.length).toFixed(2) : 0;
+
+    const delayPercentage = useMemo(() => {
+        return flights.length > 0 && !isNaN(totalDelay) ?
+            (Math.abs(totalDelay) / flights.length).toFixed(2) : 0;
+    }, [totalDelay, flights.length]);
 
     return (
         <div className="performance-dashboard">
@@ -111,30 +125,5 @@ FlightInfo.propTypes = {
         }).isRequired,
     ),
 };
-
-function formatUTCHoursMinutes(timestamp) {
-    const date = new Date(timestamp);
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-
-    return `${hours}:${minutes} ETC`;
-}
-
-function convertMinutesToHMS(minutes) {
-    minutes = Math.abs(minutes);
-
-    // Calculate hours
-    const hours = Math.floor(minutes / 60);
-
-    // Calculate remaining minutes
-    const remainingMinutes = minutes % 60;
-
-    const formattedHours = hours.toString().padStart(2, '0');
-    const formattedMinutes = remainingMinutes.toString().padStart(2, '0');
-
-    // Return formatted string with sign for negative values
-    return `${formattedHours}h:${formattedMinutes}m`;
-}
-
 
 export default FlightInfo;
